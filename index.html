@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday, Nourin 💕</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,400;1,600;1,700&family=Nunito:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #fff0f5;
+      font-family: 'Nunito', sans-serif;
+      color: #5a2a3a;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND DECORATION ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(255,182,217,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 80%, rgba(255,210,230,0.3) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(255,255,255,0.6) 0%, transparent 70%);
+    }
+
+    /* floating hearts bg */
+    .hearts-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden;
+    }
+    .heart-particle {
+      position: absolute;
+      font-size: 1.1rem;
+      opacity: 0.18;
+      animation: driftUp linear infinite;
+    }
+    @keyframes driftUp {
+      0%   { transform: translateY(100vh) rotate(0deg); opacity: 0.18; }
+      100% { transform: translateY(-10vh) rotate(20deg); opacity: 0; }
+    }
+
+    /* ── SECTIONS ── */
+    .section {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      gap: 28px;
+    }
+    .section.active { display: flex; }
+
+    /* ── GIF ── */
+    .char-gif {
+      width: 180px; height: 180px;
+      object-fit: contain;
+      filter: drop-shadow(0 6px 18px rgba(255,105,170,0.25));
+      animation: floatY 3s ease-in-out infinite;
+    }
+    @keyframes floatY {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ── BIRTHDAY TEXT ── */
+    .birthday-text {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.9rem, 6vw, 3.2rem);
+      font-weight: 700;
+      color: #e91e8c;
+      text-shadow: 0 2px 16px rgba(233,30,140,0.2);
+      text-align: center;
+      opacity: 0;
+      letter-spacing: 0.03em;
+    }
+    .birthday-text.animate {
+      animation: fadeInGlow 1.8s ease forwards;
+    }
+    @keyframes fadeInGlow {
+      0%   { opacity: 0; transform: scale(0.92); filter: blur(6px); }
+      60%  { filter: blur(0px); }
+      100% { opacity: 1; transform: scale(1); filter: blur(0px); }
+    }
+
+    .footer-credit {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.72rem;
+      color: #d48ba8;
+      opacity: 0.75;
+      letter-spacing: 0.4px;
+      margin-top: 6px;
+    }
+
+    /* ── BUTTONS ── */
+    .btn {
+      padding: 14px 40px;
+      border: none; border-radius: 50px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(135deg, #ff6eb4, #ff3d9a);
+      color: #fff;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 20px rgba(255,60,150,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .btn.visible {
+      opacity: 1; pointer-events: all;
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 8px 28px rgba(255,60,150,0.5);
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── SECTION 2 — ENVELOPE ── */
+    .envelope-scene {
+      position: relative;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+    }
+
+    /* ── LETTER PAPER ── */
+    .letter {
+      /* hidden state — tucked inside envelope */
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, 100vh);
+      width: min(88vw, 320px);
+      max-height: 60vh;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+      opacity: 0;
+      z-index: 0;
+      pointer-events: none;
+      /* natural paper */
+      background:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
+        repeating-linear-gradient(transparent, transparent 31px, rgba(210,160,180,0.2) 31px, rgba(210,160,180,0.2) 32px),
+        linear-gradient(165deg, #fefcf8 0%, #fdf6ee 40%, #fef0f4 75%, #fdf5f9 100%);
+      border-radius: 3px 3px 5px 5px;
+      padding: 36px 28px 32px;
+      /* paper edges & shadow */
+      box-shadow:
+        0 1px 0 #e8c8d4,
+        1px 0 0 #f0dce4,
+        -1px 0 0 #f0dce4,
+        0 20px 60px rgba(160,60,100,0.22),
+        0 4px 16px rgba(0,0,0,0.1),
+        inset 0 0 40px rgba(255,230,240,0.4);
+      /* slight page curl on bottom right */
+      transition: transform 1.2s cubic-bezier(0.22,1,0.36,1), opacity 0.6s ease;
+    }
+
+    /* left margin line */
+    .letter::before {
+      content: '';
+      position: absolute; top: 0; bottom: 0; left: 44px;
+      width: 1px;
+      background: linear-gradient(to bottom, transparent 30px, rgba(255,182,193,0.45), transparent);
+    }
+
+    /* page curl bottom right */
+    .letter::after {
+      content: '';
+      position: absolute; bottom: 0; right: 0;
+      width: 28px; height: 28px;
+      background: linear-gradient(225deg, #fff0f5 45%, rgba(210,160,175,0.25) 100%);
+      border-radius: 0 0 5px 0;
+      box-shadow: -2px -2px 6px rgba(180,100,130,0.15);
+      clip-path: polygon(100% 0, 100% 100%, 0 100%);
+    }
+
+    .letter.slide-out {
+      transform: translate(-50%, -50%);
+      opacity: 1;
+      z-index: 100;
+      pointer-events: all;
+    }
+
+    .letter-title {
+      font-size: 1.2rem; font-weight: 700;
+      color: #d81b60; margin-bottom: 10px;
+      letter-spacing: 0.5px;
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+    }
+    .letter-divider {
+      width: 55px; height: 1.5px;
+      background: linear-gradient(90deg, transparent, #f48fb1, transparent);
+      margin: 0 auto 18px;
+    }
+    .letter-body {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.92rem;
+      line-height: 2;
+      text-align: center;
+      color: #5a2a3a;
+    }
+    .letter-gif {
+      width: 120px;
+      margin-top: 20px;
+      display: block;
+      margin-left: auto; margin-right: auto;
+      filter: drop-shadow(0 4px 12px rgba(255,100,160,0.3));
+    }
+
+    /* ── ENVELOPE WRAPPER ── */
+    .envelope-wrap {
+      position: relative;
+      width: 300px; height: 216px;
+      cursor: pointer;
+      perspective: 1000px;
+      z-index: 3;
+      /* deep shadow for depth */
+      filter:
+        drop-shadow(0 12px 32px rgba(180,80,120,0.28))
+        drop-shadow(0 2px 6px rgba(0,0,0,0.12));
+      transition: filter 0.3s;
+    }
+    .envelope-wrap:hover {
+      filter:
+        drop-shadow(0 16px 40px rgba(180,80,120,0.38))
+        drop-shadow(0 4px 10px rgba(0,0,0,0.15));
+    }
+
+    /* main body */
+    .envelope-body {
+      width: 100%; height: 100%;
+      background: linear-gradient(160deg, #fff3c4, #ffe566, #ffd42a);
+      border-radius: 12px;
+      position: relative;
+      overflow: visible;
+      /* inner shadow for depth */
+      box-shadow: inset 0 -4px 12px rgba(180,120,0,0.15);
+    }
+
+    /* bottom V fold */
+    .env-bottom {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 56%;
+      background: linear-gradient(to top, #f5b800, #ffd42a);
+      border-radius: 0 0 12px 12px;
+      clip-path: polygon(0 100%, 50% 0%, 100% 100%);
+    }
+    /* left fold */
+    .env-left {
+      position: absolute; top: 0; left: 0; bottom: 0;
+      width: 50%; height: 100%;
+      background: linear-gradient(to right, #f0c000, #ffd42a);
+      clip-path: polygon(0 0, 100% 50%, 0 100%);
+    }
+    /* right fold */
+    .env-right {
+      position: absolute; top: 0; right: 0; bottom: 0;
+      width: 50%; height: 100%;
+      background: linear-gradient(to left, #f0c000, #ffd42a);
+      clip-path: polygon(100% 0, 0 50%, 100% 100%);
+    }
+
+    /* ── RIBBON ── */
+    .env-ribbon-h {
+      position: absolute;
+      top: 50%; left: 0; right: 0;
+      height: 18px;
+      transform: translateY(-50%);
+      background: linear-gradient(to bottom,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,100,160,0.55) 30%,
+        rgba(220,40,120,0.7) 50%,
+        rgba(255,100,160,0.55) 70%,
+        rgba(255,255,255,0.08) 100%);
+      z-index: 4;
+      pointer-events: none;
+    }
+    .env-ribbon-v {
+      position: absolute;
+      left: 50%; top: 0; bottom: 0;
+      width: 18px;
+      transform: translateX(-50%);
+      background: linear-gradient(to right,
+        rgba(255,255,255,0.08) 0%,
+        rgba(255,100,160,0.55) 30%,
+        rgba(220,40,120,0.7) 50%,
+        rgba(255,100,160,0.55) 70%,
+        rgba(255,255,255,0.08) 100%);
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    /* ── WAX SEAL ── */
+    .wax-seal {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 54px; height: 54px;
+      z-index: 6;
+      cursor: pointer;
+      transition: transform 0.3s ease, opacity 0.4s ease;
+    }
+    .wax-seal:hover { transform: translate(-50%, -50%) scale(1.08); }
+    .wax-seal.cracked { opacity: 0; transform: translate(-50%, -50%) scale(1.3); pointer-events: none; }
+    .seal-circle {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: radial-gradient(circle at 38% 35%, #ff6eb4, #c2185b 55%, #880e4f);
+      box-shadow:
+        0 3px 12px rgba(180,0,80,0.55),
+        inset 0 2px 4px rgba(255,200,220,0.4),
+        inset 0 -2px 4px rgba(100,0,40,0.3);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    /* decorative ring inside seal */
+    .seal-circle::before {
+      content: '';
+      position: absolute; inset: 5px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(255,200,220,0.45);
+    }
+    .seal-n {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: rgba(255,240,248,0.95);
+      text-shadow: 0 1px 3px rgba(100,0,50,0.5);
+      letter-spacing: 0;
+      line-height: 1;
+      position: relative; z-index: 1;
+    }
+
+    /* ── TOP FLAP ── */
+    .env-top-flap {
+      position: absolute; top: 0; left: 0; right: 0; height: 53%;
+      background: linear-gradient(170deg, #ffe566 0%, #ffd42a 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition: transform 1s cubic-bezier(0.4,0,0.2,1);
+      z-index: 5;
+      /* subtle crease */
+      box-shadow: inset 0 -3px 8px rgba(180,120,0,0.12);
+    }
+    .envelope-wrap.open .env-top-flap {
+      transform: rotateX(180deg);
+    }
+    /* hide ribbon & seal when open */
+    .envelope-wrap.open .env-ribbon-h,
+    .envelope-wrap.open .env-ribbon-v { opacity: 0; transition: opacity 0.3s; }
+
+    /* tap label — below envelope */
+    .tap-label {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 0.95rem;
+      color: #c2185b;
+      letter-spacing: 1.5px;
+      animation: pulse 1.8s ease-in-out infinite;
+      white-space: nowrap;
+      margin-top: 14px;
+      text-align: center;
+    }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+
+    /* ── CAKE SVG ── */
+    .cake-section-inner {
+      display: flex; flex-direction: column;
+      align-items: center; gap: 18px;
+    }
+    .candle-flame { animation: flicker 0.45s ease-in-out infinite alternate; transform-origin: center bottom; }
+    @keyframes flicker {
+      from { transform: scaleX(1) scaleY(1); opacity:1; }
+      to   { transform: scaleX(0.8) scaleY(1.15) translateY(-2px); opacity:0.8; }
+    }
+    .candle-flame.out { opacity:0 !important; animation:none !important; }
+
+    /* ── CAKE CUTTING ── */
+    .cake-wrap { position: relative; width: 170px; height: 195px; }
+    .cake-half {
+      position: absolute; top: 0; left: 0; width: 170px; height: 195px;
+      transition: transform 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .cake-half.left  { clip-path: inset(0 50% 0 0); }
+    .cake-half.right { clip-path: inset(0 0 0 50%); }
+    .cake-half.left.cut  { transform: translate(-15px, 5px) rotate(-5deg); }
+    .cake-half.right.cut { transform: translate(15px, 5px) rotate(5deg); }
+
+    .knife-zone {
+      position: relative; width: 170px; height: 54px; margin-bottom: -8px;
+      touch-action: none; opacity: 0; display: none;
+      animation: fadeUp 0.5s ease forwards;
+    }
+    .knife {
+      position: absolute; left: 50%; top: 0;
+      transform: translateX(-50%) rotate(32deg);
+      font-size: 2.4rem; line-height: 1; cursor: grab; user-select: none;
+      touch-action: none;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.25));
+    }
+    .knife.dragging { cursor: grabbing; }
+    .knife.hidden { opacity: 0; transition: opacity 0.4s ease; }
+    .knife-hint {
+      position: absolute; left: 50%; top: 46px;
+      transform: translateX(-50%);
+      font-size: 0.72rem; color: #d81b60; white-space: nowrap;
+      font-family: 'Nunito', sans-serif;
+      animation: bounceHint 1.3s ease-in-out infinite;
+    }
+    @keyframes bounceHint {
+      0%,100% { transform: translate(-50%, 0); }
+      50%     { transform: translate(-50%, 5px); }
+    }
+
+    /* ── BALLOONS ── */
+    .balloons-container {
+      position: fixed; inset: 0; pointer-events: none; z-index: 50; overflow: hidden;
+    }
+    .balloon {
+      position: absolute; bottom: -130px;
+      animation: riseUp 4.5s ease-in forwards;
+    }
+    @keyframes riseUp {
+      0%   { transform: translateY(0) rotate(-6deg); opacity:1; }
+      100% { transform: translateY(-120vh) rotate(6deg); opacity:0; }
+    }
+
+    /* ── SIDE BY SIDE GIFS ── */
+    .gif-row { display:flex; gap:24px; align-items:center; justify-content:center; flex-wrap:wrap; }
+    .gif-row .char-gif { width:145px; height:145px; }
+
+    /* ── ENDING ── */
+    .ending-title {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(1.5rem,4vw,2rem);
+      color: #e91e8c;
+      text-align: center;
+      animation: fadeUp 0.8s ease forwards;
+    }
+    .ending-msg {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(0.9rem,2.5vw,1.1rem);
+      color: #7a3a52;
+      text-align: center;
+      max-width: 360px;
+      line-height: 2;
+      animation: fadeUp 1s ease forwards;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      width: 60px; height: 2px;
+      background: linear-gradient(90deg, transparent, #ff6eb4, transparent);
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- floating hearts -->
+<div class="hearts-bg" id="hearts-bg"></div>
+
+<!-- ═══ SECTION 1 — OPENING ═══ -->
+<div class="section active" id="s1">
+  <img class="char-gif" id="dudu-dance"
+       src="https://media.tenor.com/5N1fi9dnNaAAAAAj/tkthao219-bubududu.gif"
+       alt="Dudu dancing 🐷"/>
+  <div class="divider"></div>
+  <div class="birthday-text" id="bday-text">Happy Birthday, Nourin 💕</div>
+  <button class="btn" id="btn-read-wish" onclick="goToS2()">Read Wish 💌</button>
+</div>
+
+<!-- ═══ SECTION 2 — ENVELOPE ═══ -->
+<div class="section" id="s2">
+  <div class="envelope-scene" id="envelope-scene">
+
+    <!-- Envelope -->
+    <div class="envelope-wrap" id="envelope" onclick="openEnvelope()">
+      <div class="envelope-body">
+        <div class="env-bottom"></div>
+        <div class="env-left"></div>
+        <div class="env-right"></div>
+        <div class="env-ribbon-h"></div>
+        <div class="env-ribbon-v"></div>
+        <div class="wax-seal" id="wax-seal">
+          <div class="seal-circle">
+            <span class="seal-n">N</span>
+          </div>
+        </div>
+        <div class="env-top-flap" id="flap"></div>
+      </div>
+    </div>
+
+    <div class="tap-label" id="tap-label">✨ Tap to open ✨</div>
+  </div>
+</div>
+
+<!-- Letter lives OUTSIDE sections so fixed positioning works freely -->
+<div class="letter" id="letter">
+  <div class="letter-title">Dear Nourin,</div>
+  <div class="letter-divider"></div>
+  <div class="letter-body">
+    শুভ জন্মদিন পাগলী। তোর সঙ্গে কাটানো ছোট ছোট মুহূর্তগুলি, আমাদের random কথাবার্তা, হাসাহাসি সবকিছুই কোন না কোন ভাবে মনে থেকে যায়। আর সত্যি বলতে, তোর সঙ্গে কথা বললে একটা সাধারণ দিনও একটু বেশি ভালো লাগে। ছোটবেলা থেকেই সেই পাগলামি, একে অপরকে নিয়ে মজা করা আর এত বছর পরেও আমাদের মধ্যে সেই আগের পাগলামিটা আছে, সেটাই সবচেয়ে ভালো লাগে। সময় যতই বদলাক, আমরা যেন সবসময় এরকমই থাকি। আজ তোর জন্মদিনে এইটুকুই চাই যে তুই সবসময় খুশি থাক, সুস্থ থাক আর মুখের এই cute হাসিটা যেন সবসময় থাকে।
+  </div>
+  <div class="letter-title" style="text-align:right; margin-top:24px;">- Your Miraj</div>
+  <img class="letter-gif"
+       src="https://media.tenor.com/r0VCmLiA3mEAAAAj/sseeyall-bubu-dudu.gif"
+       alt="Dudu loving Bubu"/>
+</div>
+
+<!-- Start celebration button — fixed at bottom, shown after letter appears -->
+<centre>
+  <button class="btn" id="btn-celebrate" onclick="goToS3()"
+  style="position:fixed; left:50%; transform:translateX(-50%); z-index:9999; display:none;">
+  Start Celebration 🎉
+</button>
+</centre>
+
+<!-- ═══ SECTION 3 — CAKE ═══ -->
+<div class="section" id="s3">
+  <div class="cake-section-inner">
+
+    <!-- Knife — drag down onto the cake to cut it -->
+    <div class="knife-zone" id="knifeZone">
+      <div class="knife" id="knife">🔪</div>
+      <div class="knife-hint" id="knifeHint">Drag down to cut ↓</div>
+    </div>
+
+    <!-- SVG Cake, split into a left half and a right half so they can be sliced apart -->
+    <div class="cake-wrap" id="cakeWrap">
+      <div class="cake-half left" id="cakeLeft">
+        <svg width="170" height="195" viewBox="0 0 170 195" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- shadow -->
+          <ellipse cx="85" cy="185" rx="68" ry="8" fill="#ffb6d9" opacity="0.35"/>
+          <!-- bottom tier -->
+          <rect x="18" y="118" width="134" height="62" rx="12" fill="#ff8fc8"/>
+          <rect x="18" y="118" width="134" height="16" rx="6" fill="#ff5ca8"/>
+          <!-- frosting drips bottom -->
+          <ellipse cx="35" cy="118" rx="9" ry="7" fill="white" opacity="0.9"/>
+          <ellipse cx="58" cy="116" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <ellipse cx="82" cy="117" rx="9" ry="7" fill="white" opacity="0.9"/>
+          <ellipse cx="107" cy="116" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <ellipse cx="132" cy="118" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <!-- dots on bottom -->
+          <circle cx="45" cy="140" r="4" fill="white" opacity="0.6"/>
+          <circle cx="75" cy="148" r="3" fill="#ffe0f0" opacity="0.8"/>
+          <circle cx="105" cy="138" r="4" fill="white" opacity="0.6"/>
+          <circle cx="130" cy="145" r="3" fill="#ffe0f0" opacity="0.8"/>
+          <!-- top tier -->
+          <rect x="36" y="66" width="98" height="56" rx="10" fill="#ffb3d9"/>
+          <rect x="36" y="66" width="98" height="15" rx="5" fill="#ff80bf"/>
+          <!-- frosting drips top -->
+          <ellipse cx="50" cy="66" rx="7" ry="5" fill="white" opacity="0.9"/>
+          <ellipse cx="72" cy="64" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <ellipse cx="97" cy="65" rx="7" ry="5" fill="white" opacity="0.9"/>
+          <ellipse cx="120" cy="66" rx="7" ry="5" fill="white" opacity="0.9"/>
+          <!-- sprinkles top tier -->
+          <rect x="52" y="82" width="9" height="3" rx="2" fill="#ff3d9a" transform="rotate(-20 52 82)"/>
+          <rect x="75" y="87" width="9" height="3" rx="2" fill="#ff80bf" transform="rotate(15 75 87)"/>
+          <rect x="100" y="80" width="9" height="3" rx="2" fill="#ffb6d9" transform="rotate(-10 100 80)"/>
+          <rect x="62" y="98" width="7" height="3" rx="2" fill="#ff3d9a" transform="rotate(25 62 98)"/>
+          <rect x="92" y="96" width="7" height="3" rx="2" fill="#ff80bf" transform="rotate(-15 92 96)"/>
+          <!-- heart on cake -->
+          <text x="81" y="110" font-size="14" text-anchor="middle" fill="white" opacity="0.7">💕</text>
+          <!-- CANDLES -->
+          <rect x="60" y="34" width="11" height="33" rx="4" fill="#ffffff"/>
+          <ellipse cx="65" cy="28" rx="5.5" ry="10" fill="#ffcc00" class="candle-flame"/>
+          <ellipse cx="65" cy="26" rx="3" ry="6.5" fill="#fff176" class="candle-flame"/>
+          <rect x="79" y="28" width="11" height="39" rx="4" fill="#ffffff"/>
+          <ellipse cx="84" cy="22" rx="5.5" ry="10" fill="#ffcc00" class="candle-flame"/>
+          <ellipse cx="84" cy="20" rx="3" ry="6.5" fill="#fff176" class="candle-flame"/>
+          <rect x="98" y="34" width="11" height="33" rx="4" fill="#ffffff"/>
+          <ellipse cx="103" cy="28" rx="5.5" ry="10" fill="#ffcc00" class="candle-flame"/>
+          <ellipse cx="103" cy="26" rx="3" ry="6.5" fill="#fff176" class="candle-flame"/>
+        </svg>
+      </div>
+      <div class="cake-half right" id="cakeRight">
+        <svg width="170" height="195" viewBox="0 0 170 195" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- shadow -->
+          <ellipse cx="85" cy="185" rx="68" ry="8" fill="#ffb6d9" opacity="0.35"/>
+          <!-- bottom tier -->
+          <rect x="18" y="118" width="134" height="62" rx="12" fill="#ff8fc8"/>
+          <rect x="18" y="118" width="134" height="16" rx="6" fill="#ff5ca8"/>
+          <!-- frosting drips bottom -->
+          <ellipse cx="35" cy="118" rx="9" ry="7" fill="white" opacity="0.9"/>
+          <ellipse cx="58" cy="116" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <ellipse cx="82" cy="117" rx="9" ry="7" fill="white" opacity="0.9"/>
+          <ellipse cx="107" cy="116" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <ellipse cx="132" cy="118" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <!-- dots on bottom -->
+          <circle cx="45" cy="140" r="4" fill="white" opacity="0.6"/>
+          <circle cx="75" cy="148" r="3" fill="#ffe0f0" opacity="0.8"/>
+          <circle cx="105" cy="138" r="4" fill="white" opacity="0.6"/>
+          <circle cx="130" cy="145" r="3" fill="#ffe0f0" opacity="0.8"/>
+          <!-- top tier -->
+          <rect x="36" y="66" width="98" height="56" rx="10" fill="#ffb3d9"/>
+          <rect x="36" y="66" width="98" height="15" rx="5" fill="#ff80bf"/>
+          <!-- frosting drips top -->
+          <ellipse cx="50" cy="66" rx="7" ry="5" fill="white" opacity="0.9"/>
+          <ellipse cx="72" cy="64" rx="8" ry="6" fill="white" opacity="0.9"/>
+          <ellipse cx="97" cy="65" rx="7" ry="5" fill="white" opacity="0.9"/>
+          <ellipse cx="120" cy="66" rx="7" ry="5" fill="white" opacity="0.9"/>
+          <!-- sprinkles top tier -->
+          <rect x="52" y="82" width="9" height="3" rx="2" fill="#ff3d9a" transform="rotate(-20 52 82)"/>
+          <rect x="75" y="87" width="9" height="3" rx="2" fill="#ff80bf" transform="rotate(15 75 87)"/>
+          <rect x="100" y="80" width="9" height="3" rx="2" fill="#ffb6d9" transform="rotate(-10 100 80)"/>
+          <rect x="62" y="98" width="7" height="3" rx="2" fill="#ff3d9a" transform="rotate(25 62 98)"/>
+          <rect x="92" y="96" width="7" height="3" rx="2" fill="#ff80bf" transform="rotate(-15 92 96)"/>
+          <!-- heart on cake -->
+          <text x="81" y="110" font-size="14" text-anchor="middle" fill="white" opacity="0.7">💕</text>
+          <!-- CANDLES -->
+          <rect x="60" y="34" width="11" height="33" rx="4" fill="#ffffff"/>
+          <ellipse cx="65" cy="28" rx="5.5" ry="10" fill="#ffcc00" class="candle-flame"/>
+          <ellipse cx="65" cy="26" rx="3" ry="6.5" fill="#fff176" class="candle-flame"/>
+          <rect x="79" y="28" width="11" height="39" rx="4" fill="#ffffff"/>
+          <ellipse cx="84" cy="22" rx="5.5" ry="10" fill="#ffcc00" class="candle-flame"/>
+          <ellipse cx="84" cy="20" rx="3" ry="6.5" fill="#fff176" class="candle-flame"/>
+          <rect x="98" y="34" width="11" height="33" rx="4" fill="#ffffff"/>
+          <ellipse cx="103" cy="28" rx="5.5" ry="10" fill="#ffcc00" class="candle-flame"/>
+          <ellipse cx="103" cy="26" rx="3" ry="6.5" fill="#fff176" class="candle-flame"/>
+        </svg>
+      </div>
+    </div>
+
+    <img class="char-gif" id="s3-gif"
+         src="https://media.tenor.com/6yBqtjeP1ekAAAAj/bubu-dudu-sseeyall.gif"
+         alt="Bubu dancing with cake 🐻"/>
+
+    <button class="btn visible" id="btn-blow" onclick="blowCandles()">Blow the Candles 🕯️</button>
+  </div>
+</div>
+
+<!-- Balloons layer -->
+<div class="balloons-container" id="balloons" style="display:none;"></div>
+
+<!-- ═══ SECTION 4 — EAT CAKE ═══ -->
+<div class="section" id="s4">
+  <div class="gif-row">
+    <img class="char-gif"
+         src="https://media.tenor.com/9VZ4FsZqMuEAAAAi/bubu-dudu-sseeyall.gif"
+         alt="Dudu eating cake 🐷"/>
+    <img class="char-gif"
+         src="https://media.tenor.com/kDB-vGnoBmUAAAAi/bubu-dudu-sseeyall.gif"
+         alt="Bubu eating cake 🐻"/>
+  </div>
+  <button class="btn visible" onclick="goToS5()">Finish 🎀</button>
+</div>
+
+<!-- ═══ SECTION 5 — ENDING ═══ -->
+<div class="section" id="s5">
+  <img class="char-gif" style="width:200px;height:200px;"
+       src="https://media.tenor.com/KaTDbDxg8n0AAAAj/tkthao219-bubududu.gif"
+       alt="Bubu loving Dudu 💕"/>
+  <div class="divider"></div>
+  <div class="birthday-text animate">Happy Birthday Nourin 💕</div>
+  <div class="footer-credit">© 2026 | Made by SK Miraj Ahamed</div>
+</div>
+
+<script>
+  // ── Floating hearts background ──
+  (function(){
+    const container = document.getElementById('hearts-bg');
+    const emojis = ['💕','🌸','✨','💗','🎀','💖','🌷'];
+    for(let i=0;i<18;i++){
+      const h = document.createElement('div');
+      h.className = 'heart-particle';
+      h.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      h.style.left = (Math.random()*100)+'%';
+      h.style.fontSize = (0.8+Math.random()*0.8)+'rem';
+      h.style.animationDuration = (12+Math.random()*16)+'s';
+      h.style.animationDelay = (Math.random()*14)+'s';
+      container.appendChild(h);
+    }
+  })();
+
+  // ── S1: type text then show button ──
+  window.addEventListener('load', ()=>{
+    setTimeout(()=>{
+      const t = document.getElementById('bday-text');
+      t.classList.add('animate');
+      // text ~2.2s + 3s delay = 5.2s
+      setTimeout(()=>{
+        document.getElementById('btn-read-wish').classList.add('visible');
+      }, 5200);
+    }, 600);
+  });
+
+  function showSection(id){
+    document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0,0);
+  }
+
+  // ── S2 ──
+  function goToS2(){ showSection('s2'); }
+
+  function openEnvelope(){
+    const env = document.getElementById('envelope');
+    if(env.classList.contains('open')) return;
+
+    // Step 1: crack wax seal
+    document.getElementById('wax-seal').classList.add('cracked');
+
+    // Step 2: open flap
+    setTimeout(()=>{
+      env.classList.add('open');
+      document.getElementById('tap-label').style.display = 'none';
+
+      // Step 3: fade out envelope scene
+      setTimeout(()=>{
+        const scene = document.getElementById('envelope-scene');
+        scene.style.transition = 'opacity 0.5s ease';
+        scene.style.opacity = '0';
+        setTimeout(()=>{ scene.style.visibility = 'hidden'; }, 500);
+
+        // Step 4: show letter in center of screen
+        const letter = document.getElementById('letter');
+        letter.classList.add('slide-out');
+
+        // Step 5: show button after letter appears, positioned just below the letter
+        setTimeout(()=>{
+          const btn = document.getElementById('btn-celebrate');
+          const letterRect = letter.getBoundingClientRect();
+          btn.style.top = (letterRect.bottom + 22) + 'px';
+          btn.style.display = 'block';
+          btn.classList.add('visible');
+        }, 1500);
+      }, 800);
+    }, 400);
+  }
+
+  window.addEventListener('resize', ()=>{
+    const btn = document.getElementById('btn-celebrate');
+    if(btn.classList.contains('visible')){
+      const letterRect = document.getElementById('letter').getBoundingClientRect();
+      btn.style.top = (letterRect.bottom + 22) + 'px';
+    }
+  });
+
+  // ── S3 ──
+  function goToS3(){
+    // hide letter overlay and button
+    document.getElementById('letter').style.display = 'none';
+    const btn = document.getElementById('btn-celebrate');
+    btn.style.display = 'none';
+    btn.classList.remove('visible');
+    showSection('s3');
+  }
+
+  function blowCandles(){
+    document.querySelectorAll('.candle-flame').forEach(f=>f.classList.add('out'));
+    document.getElementById('btn-blow').style.display='none';
+    launchBalloons();
+    setTimeout(()=>{
+      const gif = document.getElementById('s3-gif');
+      gif.src = 'https://media.tenor.com/KvwRzYnJpFkAAAAj/tkthao219-bubududu.gif';
+      gif.alt = 'Bubu blowing candles 🕯️';
+      setTimeout(showKnife, 1000);
+    }, 1200);
+  }
+
+  // ── Cut the cake: drag the knife down onto it ──
+  let knifeDragging = false, knifeCut = false, knifeStartClientY = 0, knifeStartTop = 0;
+  const CUT_THRESHOLD = 40; // px the knife must be dragged down to trigger the cut
+
+  function showKnife(){
+    const zone = document.getElementById('knifeZone');
+    zone.style.display = 'block';
+    const knife = document.getElementById('knife');
+    knife.style.top = '0px';
+    knife.addEventListener('pointerdown', knifeDown);
+    knife.addEventListener('pointermove', knifeMove);
+    knife.addEventListener('pointerup', knifeUp);
+    knife.addEventListener('pointercancel', knifeUp);
+  }
+
+  function knifeDown(e){
+    if(knifeCut) return;
+    knifeDragging = true;
+    const knife = document.getElementById('knife');
+    knife.classList.add('dragging');
+    knife.style.transition = 'none';
+    knifeStartClientY = e.clientY;
+    knifeStartTop = parseFloat(knife.style.top) || 0;
+    knife.setPointerCapture(e.pointerId);
+  }
+
+  function knifeMove(e){
+    if(!knifeDragging || knifeCut) return;
+    const dy = Math.max(0, e.clientY - knifeStartClientY); // downward drag only
+    const newTop = knifeStartTop + dy;
+    document.getElementById('knife').style.top = newTop + 'px';
+    if(newTop >= CUT_THRESHOLD){
+      cutCake();
+    }
+  }
+
+  function knifeUp(){
+    knifeDragging = false;
+    const knife = document.getElementById('knife');
+    knife.classList.remove('dragging');
+    if(!knifeCut){
+      knife.style.transition = 'top 0.35s ease';
+      knife.style.top = '0px';
+    }
+  }
+
+  function cutCake(){
+    if(knifeCut) return;
+    knifeCut = true;
+    knifeDragging = false;
+
+    document.getElementById('knifeHint').style.display = 'none';
+
+    // plunge the knife the rest of the way in, then fade it out
+    const knife = document.getElementById('knife');
+    knife.style.transition = 'top 0.15s ease';
+    knife.style.top = '58px';
+    knife.classList.add('hidden');
+
+    // split the cake
+    document.getElementById('cakeLeft').classList.add('cut');
+    document.getElementById('cakeRight').classList.add('cut');
+
+    // swap in the celebration gif
+    const gif = document.getElementById('s3-gif');
+    gif.src = 'https://media.tenor.com/DmLXGbELO60AAAAj/bubu-dudu-bubu-dudu-happy.gif';
+    gif.alt = 'Dudu celebrating 🎉';
+
+    setTimeout(()=>{
+      const btn = document.createElement('button');
+      btn.className = 'btn visible';
+      btn.innerHTML = "Let's eat cake 🎂";
+      btn.onclick = goToS4;
+      document.querySelector('#s3 .cake-section-inner').appendChild(btn);
+    }, 700);
+  }
+
+  function launchBalloons(){
+    const c = document.getElementById('balloons');
+    c.style.display='block';
+    const items = ['🎈','🎈','🎀','🎉','💕','🌸','🎈','✨','🎈','💗'];
+    items.forEach((e,i)=>{
+      const b = document.createElement('div');
+      b.className='balloon';
+      b.textContent=e;
+      b.style.left=(5+i*9+Math.random()*4)+'%';
+      b.style.animationDelay=(i*0.22)+'s';
+      b.style.fontSize=(2.4+Math.random()*1)+'rem';
+      c.appendChild(b);
+    });
+    setTimeout(()=>{ c.style.display='none'; c.innerHTML=''; }, 5500);
+  }
+
+  // ── S4 ──
+  function goToS4(){ showSection('s4'); }
+
+  // ── S5 ──
+  function goToS5(){ showSection('s5'); }
+</script>
+</body>
+</html>

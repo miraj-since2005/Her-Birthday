@@ -139,10 +139,10 @@
     /* ── LETTER OVERLAY (scrollable so tall letters + button stay reachable) ── */
     .letter-overlay {
       position: fixed; inset: 0; z-index: 100;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      padding: 48px 0;
+      padding: 56px 0 80px;
       opacity: 0; pointer-events: none;
       transition: opacity 0.5s ease;
     }

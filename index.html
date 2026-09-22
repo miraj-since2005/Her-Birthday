@@ -136,20 +136,25 @@
       gap: 0;
     }
 
-    /* ── LETTER PAPER ── */
-    .letter {
-      /* hidden state — tucked inside envelope */
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, 100vh);
-      width: min(88vw, 320px);
-      max-height: 60vh;
+    /* ── LETTER OVERLAY (scrollable so tall letters + button stay reachable) ── */
+    .letter-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
-      overscroll-behavior: contain;
+      padding: 48px 0;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+    .letter-overlay.visible { opacity: 1; pointer-events: all; }
+
+    /* ── LETTER PAPER ── */
+    .letter {
+      position: relative;
+      transform: translateY(60px);
+      width: min(88vw, 320px);
       opacity: 0;
-      z-index: 0;
-      pointer-events: none;
+      flex-shrink: 0;
       /* natural paper */
       background:
         url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E"),
@@ -189,10 +194,8 @@
     }
 
     .letter.slide-out {
-      transform: translate(-50%, -50%);
+      transform: translateY(0);
       opacity: 1;
-      z-index: 100;
-      pointer-events: all;
     }
 
     .letter-title {
@@ -512,26 +515,24 @@
   </div>
 </div>
 
-<!-- Letter lives OUTSIDE sections so fixed positioning works freely -->
-<div class="letter" id="letter">
-  <div class="letter-title">Dear Nourin,</div>
-  <div class="letter-divider"></div>
-  <div class="letter-body">
-    শুভ জন্মদিন পাগলী। তোর সঙ্গে কাটানো ছোট ছোট মুহূর্তগুলি, আমাদের random কথাবার্তা, হাসাহাসি সবকিছুই কোন না কোন ভাবে মনে থেকে যায়। আর সত্যি বলতে, তোর সঙ্গে কথা বললে একটা সাধারণ দিনও একটু বেশি ভালো লাগে। ছোটবেলা থেকেই সেই পাগলামি, একে অপরকে নিয়ে মজা করা আর এত বছর পরেও আমাদের মধ্যে সেই আগের পাগলামিটা আছে, সেটাই সবচেয়ে ভালো লাগে। সময় যতই বদলাক, আমরা যেন সবসময় এরকমই থাকি। আজ তোর জন্মদিনে এইটুকুই চাই যে তুই সবসময় খুশি থাক, সুস্থ থাক আর মুখের এই cute হাসিটা যেন সবসময় থাকে।
+<!-- Letter overlay lives OUTSIDE sections; it's a full-screen scrollable layer -->
+<div class="letter-overlay" id="letterOverlay">
+  <div class="letter" id="letter">
+    <div class="letter-title">Dear Nourin,</div>
+    <div class="letter-divider"></div>
+    <div class="letter-body">
+      শুভ জন্মদিন পাগলী। তোর সঙ্গে কাটানো ছোট ছোট মুহূর্তগুলি, আমাদের random কথাবার্তা, হাসাহাসি সবকিছুই কোন না কোন ভাবে মনে থেকে যায়। আর সত্যি বলতে, তোর সঙ্গে কথা বললে একটা সাধারণ দিনও একটু বেশি ভালো লাগে। ছোটবেলা থেকেই সেই পাগলামি, একে অপরকে নিয়ে মজা করা আর এত বছর পরেও আমাদের মধ্যে সেই আগের পাগলামিটা আছে, সেটাই সবচেয়ে ভালো লাগে। সময় যতই বদলাক, আমরা যেন সবসময় এরকমই থাকি। আজ তোর জন্মদিনে এইটুকুই চাই যে তুই সবসময় খুশি থাক, সুস্থ থাক আর মুখের এই strong and cute হাসিটা যেন সবসময় থাকে।
+    </div>
+    <div class="letter-title" style="text-align:right; margin-top:24px;">- Your Miraj</div>
+    <img class="letter-gif"
+         src="https://media.tenor.com/r0VCmLiA3mEAAAAj/sseeyall-bubu-dudu.gif"
+         alt="Dudu loving Bubu"/>
   </div>
-  <div class="letter-title" style="text-align:right; margin-top:24px;">- Your Miraj</div>
-  <img class="letter-gif"
-       src="https://media.tenor.com/r0VCmLiA3mEAAAAj/sseeyall-bubu-dudu.gif"
-       alt="Dudu loving Bubu"/>
-</div>
 
-<!-- Start celebration button — fixed at bottom, shown after letter appears -->
-<centre>
-  <button class="btn" id="btn-celebrate" onclick="goToS3()"
-  style="position:fixed; left:50%; transform:translateX(-50%); z-index:9999; display:none;">
-  Start Celebration 🎉
-</button>
-</centre>
+  <button class="btn" id="btn-celebrate" onclick="goToS3()" style="margin-top:26px;">
+    Start Celebration 🎉
+  </button>
+</div>
 
 <!-- ═══ SECTION 3 — CAKE ═══ -->
 <div class="section" id="s3">
@@ -730,37 +731,24 @@
         scene.style.opacity = '0';
         setTimeout(()=>{ scene.style.visibility = 'hidden'; }, 500);
 
-        // Step 4: show letter in center of screen
+        // Step 4: reveal the scrollable letter overlay
+        const overlay = document.getElementById('letterOverlay');
+        overlay.classList.add('visible');
         const letter = document.getElementById('letter');
         letter.classList.add('slide-out');
 
-        // Step 5: show button after letter appears, positioned just below the letter
+        // Step 5: show button after letter appears
         setTimeout(()=>{
-          const btn = document.getElementById('btn-celebrate');
-          const letterRect = letter.getBoundingClientRect();
-          btn.style.top = (letterRect.bottom + 22) + 'px';
-          btn.style.display = 'block';
-          btn.classList.add('visible');
+          document.getElementById('btn-celebrate').classList.add('visible');
         }, 1500);
       }, 800);
     }, 400);
   }
 
-  window.addEventListener('resize', ()=>{
-    const btn = document.getElementById('btn-celebrate');
-    if(btn.classList.contains('visible')){
-      const letterRect = document.getElementById('letter').getBoundingClientRect();
-      btn.style.top = (letterRect.bottom + 22) + 'px';
-    }
-  });
-
   // ── S3 ──
   function goToS3(){
-    // hide letter overlay and button
-    document.getElementById('letter').style.display = 'none';
-    const btn = document.getElementById('btn-celebrate');
-    btn.style.display = 'none';
-    btn.classList.remove('visible');
+    // hide the letter overlay so it stops blocking clicks on later sections
+    document.getElementById('letterOverlay').classList.remove('visible');
     showSection('s3');
   }
 
@@ -841,7 +829,7 @@
 
     // swap in the celebration gif
     const gif = document.getElementById('s3-gif');
-    gif.src = 'https://media.tenor.com/DmLXGbELO60AAAAj/bubu-dudu-bubu-dudu-happy.gif';
+    gif.src = 'https://media.tenor.com/koiXoigQIi0AAAAi/dudu-playing-drums-dudu-playing-musics-instruments.gif';
     gif.alt = 'Dudu celebrating 🎉';
 
     setTimeout(()=>{
